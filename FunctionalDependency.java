@@ -1,3 +1,5 @@
+import java.util.Iterator;
+
 /**
  * Represents a functional dependency, namely the dependent attributes
  * are determined by the independent set.
@@ -21,5 +23,23 @@ public class FunctionalDependency {
 
 	public AttributeSet dependent() {
 		return new AttributeSet(_dependentAttributeSet);
+	}
+	
+	public AttributeSet getindependent(){
+		return this._independentAttributeSet;
+	}
+	
+	public AttributeSet getdependent(){
+		return this._dependentAttributeSet;
+	}
+	
+	public String toString() {
+		String out = "";
+		Iterator<Attribute> independ = this.independent().iterator();
+		while(independ.hasNext()) out += independ.next();
+        out += "->";
+        Iterator<Attribute> depend = this.dependent().iterator();
+        while (depend.hasNext()) out += depend.next();
+		return out;
 	}
 }

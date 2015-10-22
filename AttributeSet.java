@@ -19,6 +19,10 @@ public class AttributeSet {
 	public AttributeSet(AttributeSet other) {
 		_attributes = new ArrayList<>(other._attributes);
 	}
+	
+	public AttributeSet(List<Attribute> listother){
+		_attributes = listother;
+	}
 
 	public void addAttribute(Attribute a) {
 		if(!_attributes.contains(a))
@@ -53,4 +57,10 @@ public class AttributeSet {
 
 		return out;
 	}
+	
+	public List<Attribute> transferToList(){
+		return this._attributes;
+	}
+
+
 }

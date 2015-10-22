@@ -7,88 +7,112 @@ public class BCNF {
 	 **/
 	public static Set<AttributeSet> decompose(AttributeSet attributeSet,
 			Set<FunctionalDependency> functionalDependencies) {
-		AttributeSet X = new AttributeSet(attributeSet);
-		Set<FunctionalDependency> FD = new HashSet<FunctionalDependency>(functionalDependencies);
+//		AttributeSet X = new AttributeSet(attributeSet);
+//		Set<FunctionalDependency> FD = new HashSet<FunctionalDependency>(functionalDependencies);
 		Set<AttributeSet> res = new HashSet<>();
-		if (X.size()==0 || X==null) return res;
-		Set<AttributeSet> powerset = powerset(X);
+		Set<AttributeSet> powerset = powerset(attributeSet);
+//		Set<AttributeSet> powerset = new HashSet<>();
+//		for (AttributeSet mama : powersettemp){
+//			AttributeSet temp22 = new AttributeSet();
+//			for (Attribute ele : mama.transferToList()){
+//				if (!ele.toString().isEmpty()){
+//					temp22.addAttribute(ele);
+//				}
+//			}
+//			powerset.add(temp22);
+//			
+//		}
 		for (AttributeSet i:powerset){
-			AttributeSet clos = closure(i,FD);
+			AttributeSet clos = closure(i,functionalDependencies);
 			AttributeSet closs = new AttributeSet();
-			for (Attribute j:getSet(clos)){
-				if (X.contains(j)) closs.addAttribute(j);
+			for (Attribute j:clos.transferToList()){
+				if (attributeSet.contains(j)) closs.addAttribute(j);
 			}
-			clos = closs;
-			if (i.equals(clos) || clos.equals(X)) continue;
-			Set<Attribute> atst = getSet(X);
-			AttributeSet restOfClosure = new AttributeSet();
-			// second part 
-			for (Attribute n:getSet(i)){
-				restOfClosure.addAttribute(n);
+			//clos = closs;
+			if (i.equals(closs) || closs.equals(attributeSet)) {
+				continue;
 			}
-			for (Attribute m:atst){
-				if (!clos.contains(m)) restOfClosure.addAttribute(m);
+
+			List<Attribute> restpart1 = new ArrayList<>(i.transferToList());
+			for (Attribute xx:attributeSet.transferToList()){
+				if (!closs.contains(xx)){
+					restpart1.add(xx);
+				}
 			}
-			res.addAll(decompose(clos,FD));
-			res.addAll(decompose(restOfClosure,FD));
+			AttributeSet rest = new AttributeSet(restpart1);
+			res.addAll(decompose(closs,functionalDependencies));
+			res.addAll(decompose(rest,functionalDependencies));
 			return res;
 		}
-		res.add(X);
+		res.add(attributeSet);
 		return res;
 	}
+
 
 	/**
 	 * Recommended helper method
 	 **/
 	public static AttributeSet closure(AttributeSet attributeSet, Set<FunctionalDependency> functionalDependencies) {
 		// TODO: implement me!
-		AttributeSet oldd = new AttributeSet();
-		AttributeSet newd = new AttributeSet(attributeSet);
-		boolean check = true;
-		while (!oldd.equals(newd)){
-			oldd = new AttributeSet(newd);
-			for (FunctionalDependency fd : functionalDependencies){
-				if (fd.independent().size() <= newd.size()){
-					Iterator<Attribute> iter_fdind = fd.independent().iterator();
-					while (iter_fdind.hasNext()){
-						Attribute fdnext = iter_fdind.next();
-						if (!newd.contains(fdnext)){
-							check = false;                 
-							break;
-						} 
+		AttributeSet update = new AttributeSet(attributeSet);
+		AttributeSet newdep = new AttributeSet(attributeSet);
+		HashMap<String,Integer> count = new HashMap<>();
+		HashMap<String,Set<FunctionalDependency>> list = new HashMap<>();
+		for (FunctionalDependency fd : functionalDependencies){
+			count.put(fd.toString(), fd.getindependent().size());
+			Iterator<Attribute> As = fd.getindependent().iterator();
+			while (As.hasNext()){
+				Attribute A = As.next();
+				if (!list.containsKey(A.toString())){
+					Set<FunctionalDependency> tempset = new HashSet<>();
+					tempset.add(fd);
+					list.put(A.toString(),tempset);
+				}
+				else{
+					list.get(A.toString()).add(fd);
+				}
+			}
+			while (update.size() != 0){
+				Attribute tempA = update.transferToList().get(0);
+				update.transferToList().remove(0);
+				if (list.containsKey(tempA.toString())){
+					Set<FunctionalDependency> miao= list.get(tempA.toString());
+					for (FunctionalDependency tempX : miao){
+						int minus1 = count.get(tempX.toString()) -1;
+						count.put(tempX.toString(), minus1);
+						if (minus1 == 0){
+							AttributeSet dependX = tempX.dependent();
+							AttributeSet add = new AttributeSet();
+							for (Attribute xx : dependX.transferToList()){
+								if (!newdep.transferToList().contains(xx)){
+									add.addAttribute(xx);
+								}
+							}
+							for (Attribute xx2 : add.transferToList()){
+								update.addAttribute(xx2);
+								newdep.addAttribute(xx2);
+							}
+
+						}
 					}
 				}
-				if (check == true) {
-					Iterator<Attribute> iter_fddep = fd.dependent().iterator();
-					while (iter_fddep.hasNext()){
-						newd.addAttribute(iter_fddep.next());
-					}
-				}
-				check = true;
 			}
 		}
-
-		return newd;
+		return newdep;
 	}
 
 	public static Set<AttributeSet> powerset(AttributeSet attributeSet){
 		Set<AttributeSet> sets = new HashSet<>();
-		if (attributeSet.size()==0 || attributeSet == null){
-			sets.add(new AttributeSet());
+
+		if (attributeSet.size()==0){
+			sets.add(new AttributeSet(attributeSet));
 			return sets;
 		}
-		List<Attribute> list = new ArrayList<>();
-		Iterator<Attribute> ite = attributeSet.iterator();
-		while (ite.hasNext()){
-			list.add(ite.next());
-		}
+		List<Attribute> list = new ArrayList<>(attributeSet.transferToList());
 		Attribute head = list.get(0);
-		Set<Attribute> rest_temp = new HashSet<Attribute>(list.subList(1, list.size()));
-		AttributeSet rest = new AttributeSet();
-		Iterator<Attribute> tt = rest_temp.iterator();
-		while (tt.hasNext()){
-			rest.addAttribute(tt.next());
-		}
+
+		AttributeSet rest = new AttributeSet(list.subList(1, list.size()));
+		
 		for (AttributeSet temp:powerset(rest)){
 			AttributeSet newSet = new AttributeSet();
 			newSet.addAttribute(head);
@@ -101,12 +125,4 @@ public class BCNF {
 		return sets;
 	}
 
-	public static Set<Attribute> getSet(AttributeSet haha){
-		Iterator<Attribute> miao = haha.iterator();
-		Set<Attribute> res = new HashSet<Attribute>();
-		while (miao.hasNext()){
-			res.add(miao.next());
-		}
-		return res;
-	}
 }
