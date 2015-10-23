@@ -42,4 +42,8 @@ public class FunctionalDependency {
         while (depend.hasNext()) out += depend.next();
 		return out;
 	}
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 53d71a355a2c9e7ecbdac71628eca762aa22f824

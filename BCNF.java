@@ -7,6 +7,7 @@ public class BCNF {
 	 **/
 	public static Set<AttributeSet> decompose(AttributeSet attributeSet,
 			Set<FunctionalDependency> functionalDependencies) {
+<<<<<<< HEAD
 
 		Set<AttributeSet> res = new HashSet<>();
 		Set<AttributeSet> powerset = remove(powerset(attributeSet));
@@ -14,12 +15,33 @@ public class BCNF {
 
 		for (AttributeSet i:powerset){
 			System.out.println(i);
+=======
+//		AttributeSet X = new AttributeSet(attributeSet);
+//		Set<FunctionalDependency> FD = new HashSet<FunctionalDependency>(functionalDependencies);
+		Set<AttributeSet> res = new HashSet<>();
+		Set<AttributeSet> powerset = powerset(attributeSet);
+//		Set<AttributeSet> powerset = new HashSet<>();
+//		for (AttributeSet mama : powersettemp){
+//			AttributeSet temp22 = new AttributeSet();
+//			for (Attribute ele : mama.transferToList()){
+//				if (!ele.toString().isEmpty()){
+//					temp22.addAttribute(ele);
+//				}
+//			}
+//			powerset.add(temp22);
+//			
+//		}
+		for (AttributeSet i:powerset){
+>>>>>>> 53d71a355a2c9e7ecbdac71628eca762aa22f824
 			AttributeSet clos = closure(i,functionalDependencies);
 			AttributeSet closs = new AttributeSet();
 			for (Attribute j:clos.transferToList()){
 				if (attributeSet.contains(j)) closs.addAttribute(j);
 			}
+<<<<<<< HEAD
 			System.out.println(closs);
+=======
+>>>>>>> 53d71a355a2c9e7ecbdac71628eca762aa22f824
 			//clos = closs;
 			if (i.equals(closs) || closs.equals(attributeSet)) {
 				continue;
@@ -32,7 +54,10 @@ public class BCNF {
 				}
 			}
 			AttributeSet rest = new AttributeSet(restpart1);
+<<<<<<< HEAD
 			System.out.println(rest);
+=======
+>>>>>>> 53d71a355a2c9e7ecbdac71628eca762aa22f824
 			res.addAll(decompose(closs,functionalDependencies));
 			res.addAll(decompose(rest,functionalDependencies));
 			return res;
@@ -107,12 +132,16 @@ public class BCNF {
 		AttributeSet rest = new AttributeSet(list.subList(1, list.size()));
 		
 		for (AttributeSet temp:powerset(rest)){
+<<<<<<< HEAD
 //			System.out.println(temp);
+=======
+>>>>>>> 53d71a355a2c9e7ecbdac71628eca762aa22f824
 			AttributeSet newSet = new AttributeSet();
 			newSet.addAttribute(head);
 			Iterator<Attribute> tt2 = temp.iterator();
 			while (tt2.hasNext()) newSet.addAttribute(tt2.next());
 			sets.add(newSet);
+<<<<<<< HEAD
 //			System.out.println(sets);
 			sets.add(temp);
 //			System.out.println(sets);
@@ -140,3 +169,12 @@ public class BCNF {
 	}
 }
 
+=======
+			sets.add(temp);
+		}
+
+		return sets;
+	}
+
+}
+>>>>>>> 53d71a355a2c9e7ecbdac71628eca762aa22f824

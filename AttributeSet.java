@@ -28,10 +28,13 @@ public class AttributeSet {
 		if(!_attributes.contains(a))
 			_attributes.add(a);
 	}
+<<<<<<< HEAD
 	
 	public void append(AttributeSet other){
 		this._attributes.addAll(other.transferToList());
 	}
+=======
+>>>>>>> 53d71a355a2c9e7ecbdac71628eca762aa22f824
 
 	public boolean contains(Attribute a) {
 		return _attributes.contains(a);
@@ -40,22 +43,29 @@ public class AttributeSet {
 	public int size() {
 		return _attributes.size();
 	}
+<<<<<<< HEAD
 	
 	public boolean isEmpty(){
 		return this._attributes.size()==0;
 	}
+=======
+>>>>>>> 53d71a355a2c9e7ecbdac71628eca762aa22f824
 
 	public boolean equals(Object other) {
 		if(other == null || !(other instanceof AttributeSet)){
 			return false;
 		}
 		//TODO: you should probably implement this
+<<<<<<< HEAD
 		AttributeSet temp = (AttributeSet) other;
 		if (this.transferToList().containsAll(temp.transferToList()) &&
 			temp.transferToList().containsAll(this.transferToList())){
 			return true;
 		}
 		return false;
+=======
+		return this == other;
+>>>>>>> 53d71a355a2c9e7ecbdac71628eca762aa22f824
 	}
 
 	public Iterator<Attribute> iterator() {
@@ -77,4 +87,7 @@ public class AttributeSet {
 
 
 }
+<<<<<<< HEAD
 
+=======
+>>>>>>> 53d71a355a2c9e7ecbdac71628eca762aa22f824
